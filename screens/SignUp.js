@@ -4,6 +4,7 @@ import TextBox from "../components/TextBox"
 import Btn from "../components/Btn"
 import firebase from 'firebase/app';
 import "firebase/auth";
+import "firebase/firestore";
 
 const styles = StyleSheet.create({
     view: {
@@ -16,7 +17,12 @@ const styles = StyleSheet.create({
 
 export default function SignUpScreen({ navigation }) {
 
+    const auth = firebase.auth;
+    const firestore = firebase.firestore;
+
     const [values, setValues] = useState({
+        name: "",
+        role: "",
         email: "",
         pwd: "",
         pwd2: ""
@@ -33,11 +39,17 @@ export default function SignUpScreen({ navigation }) {
 
     function SignUp() {
 
-        const { email, pwd, pwd2 } = values
+        const { email, pwd, pwd2, name, role } = values
 
         if (pwd == pwd2) {
-            firebase.auth().createUserWithEmailAndPassword(email, pwd)
+            auth().createUserWithEmailAndPassword(email, pwd)
                 .then(() => {
+                    firestore().collection("users").doc(auth().currentUser.uid).set({
+                        uid: auth().currentUser.uid,
+                        name,
+                        role,
+                        email
+                    })
                 })
                 .catch((error) => {
                     alert(error.message)
@@ -50,7 +62,9 @@ export default function SignUpScreen({ navigation }) {
 
     return <View style={styles.view}>
         <Text style={{ fontSize: 34, fontWeight: "800", marginBottom: 20 }}>Sign Up</Text>
+        <TextBox placeholder="Full Name" onChangeText={text => handleChange(text, "name")} />
         <TextBox placeholder="Email Address" onChangeText={text => handleChange(text, "email")} />
+        <TextBox placeholder="Who are you? (Student or Teacher)" onChangeText={text => handleChange(text, "role")}/>
         <TextBox placeholder="Password" secureTextEntry={true}  onChangeText={text => handleChange(text, "pwd")}/>
         <TextBox placeholder="Confirme Password" secureTextEntry={true}  onChangeText={text => handleChange(text, "pwd2")}/>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "92%", }}>

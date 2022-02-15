@@ -16,12 +16,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const firebaseConfig = {
-    apiKey: "AIzaSyDONUhQc3-tw-ldb0L85l9gR_BwImXHarg",
-    authDomain: "round-plating-315816.firebaseapp.com",
-    projectId: "round-plating-315816",
-    storageBucket: "round-plating-315816.appspot.com",
-    messagingSenderId: "729983705766",
-    appId: "1:729983705766:web:39aa18d337fa040cf90a67"
+    ...
   };
 
   //Checking if firebase has been initialized
